@@ -1,6 +1,0 @@
-module minizip [system][extern_c] {
-    link "libminizip.a"
-    link "libz.dylib"
-    header "mini zip.h"
-    export *
-}
