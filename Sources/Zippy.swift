@@ -1,5 +1,5 @@
 import Foundation
-import minizip
+import CMinizip
 
 
 public enum UnzipError: Error {
