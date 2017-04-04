@@ -32,12 +32,12 @@ public class SwiftZip {
         var buffer = Array<CUnsignedChar>(repeating: 0, count: Int(bufferSize))
         
         // Progress handler set up
-        var totalSize: Double = 0.0
-        var currentPosition: Double = 0.0
-        let fileAttributes = try fileManager.attributesOfItem(atPath: path)
-        if let attributeFileSize = fileAttributes[FileAttributeKey.size] as? Double {
-            totalSize += attributeFileSize
-        }
+//        var totalSize: Double = 0.0
+//        var currentPosition: Double = 0.0
+//        let fileAttributes = try fileManager.attributesOfItem(atPath: path)
+//        if let attributeFileSize = fileAttributes[FileAttributeKey.size] as? Double {
+//            totalSize += attributeFileSize
+//        }
         
         
         // Begin unzipping
@@ -65,7 +65,7 @@ public class SwiftZip {
                 unzCloseCurrentFile(zip)
                 throw UnzipError.fail
             }
-            currentPosition += Double(fileInfo.compressed_size)
+//            currentPosition += Double(fileInfo.compressed_size)
             let fileNameSize = Int(fileInfo.size_filename) + 1
             //let fileName = UnsafeMutablePointer<CChar>(allocatingCapacity: fileNameSize)
             let fileName = UnsafeMutablePointer<CChar>.allocate(capacity: fileNameSize)
@@ -91,16 +91,16 @@ public class SwiftZip {
             
             let fullPath = destination.appendingPathComponent(pathString).path
             
-            let creationDate = Date()
-            let directoryAttributes = [FileAttributeKey.creationDate : creationDate,
-                                       FileAttributeKey.modificationDate : creationDate]
+//            let creationDate = Date()
+//            let directoryAttributes = [FileAttributeKey.creationDate : creationDate,
+//                                       FileAttributeKey.modificationDate : creationDate]
             do {
                 if isDirectory {
-                    try fileManager.createDirectory(atPath: fullPath, withIntermediateDirectories: true, attributes: directoryAttributes)
+                    try fileManager.createDirectory(atPath: fullPath, withIntermediateDirectories: true, attributes: nil/*directoryAttributes*/)
                 }
                 else {
                     let parentDirectory = NSString(string:fullPath).deletingLastPathComponent
-                    try fileManager.createDirectory(atPath: parentDirectory, withIntermediateDirectories: true, attributes: directoryAttributes)
+                    try fileManager.createDirectory(atPath: parentDirectory, withIntermediateDirectories: true, attributes: nil/*directoryAttributes*/)
                 }
             } catch {}
             if fileManager.fileExists(atPath: fullPath) && !isDirectory && !overwrite {
@@ -126,17 +126,17 @@ public class SwiftZip {
             }
             
             //Set file permissions from current fileInfo
-            if fileInfo.external_fa != 0 {
-                let permissions = (fileInfo.external_fa >> 16) & 0x1FF
-                //We will devifne a valid permission range between Owner read only to full access
-                if permissions >= 0o400 && permissions <= 0o777 {
-                    do {
-                        try fileManager.setAttributes([.posixPermissions : permissions], ofItemAtPath: fullPath)
-                    } catch {
-                        print("Failed to set permissions to file \(fullPath), error: \(error)")
-                    }
-                }
-            }
+//            if fileInfo.external_fa != 0 {
+//                let permissions = (fileInfo.external_fa >> 16) & 0x1FF
+//                //We will devifne a valid permission range between Owner read only to full access
+//                if permissions >= 0o400 && permissions <= 0o777 {
+//                    do {
+//                        try fileManager.setAttributes([.posixPermissions : permissions], ofItemAtPath: fullPath)
+//                    } catch {
+//                        print("Failed to set permissions to file \(fullPath), error: \(error)")
+//                    }
+//                }
+//            }
             
             ret = unzGoToNextFile(zip)
             
